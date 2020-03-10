@@ -44,11 +44,19 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState != null){
+            mScore = savedInstanceState.getInt("ScoreKey");
+            mIndex = savedInstanceState.getInt("IndexKey");
+        }else {
+            mScore=0;
+            mIndex=0;
+        }
         mTrueButton = (Button) findViewById(R.id.true_button);
         mFalseButton = (Button) findViewById(R.id.false_button);
         mTextView = (TextView) findViewById(R.id.question_text_view);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mScoreTextView = (TextView) findViewById(R.id.score);
+        mScoreTextView.setText("Score " + mScore + "/" + mQuestionBank.length);
         mQuestion = mQuestionBank[mIndex].getQuestionID();
         mTextView.setText(mQuestion);
 
@@ -86,16 +94,21 @@ public class MainActivity extends Activity {
         mQuestion = mQuestionBank[mIndex].getQuestionID();
         mTextView.setText(mQuestion);
         mProgressBar.incrementProgressBy(PROGRESSBAR_INC);
-        mScoreTextView.setText("Score " + mScore + "/" + mQuestionBank.length);
+
     }
     private void checkAnswer (boolean userSelection){
         boolean currectAnswer = mQuestionBank[mIndex].isAnswer();
         if (userSelection == currectAnswer) {
             Toast.makeText(getApplicationContext(),R.string.correct_toast,Toast.LENGTH_SHORT).show();
             mScore = mScore + 1;
-
         }else {
             Toast.makeText(getApplicationContext(),R.string.incorrect_toast,Toast.LENGTH_SHORT).show();
         }
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outstate){
+        super.onSaveInstanceState(outstate);
+        outstate.putInt("Scorekey", mScore);
+        outstate.putInt("IndexKey",mIndex);
     }
 }
